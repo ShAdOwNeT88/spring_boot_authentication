@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: spring-authentication
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:h2:mem:spring-security
+    driver-class-name: org.h2.Driver
+    username: root
+    password: 12345
+  h2:
+    console:
+      enabled: true
+token:
+  signing:
+    #This key is used as base to generate tokens for authentication
+    key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
