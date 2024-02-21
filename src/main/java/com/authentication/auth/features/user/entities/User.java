@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -29,8 +30,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    private Timestamp dateOfBirth;
+    private LocalDateTime dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Role role;
 
