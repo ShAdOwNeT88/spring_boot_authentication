@@ -1,5 +1,6 @@
 package com.authentication.auth.features.user.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +29,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    private Timestamp dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -69,6 +73,7 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
                 ", role=" + role +
                 '}';
     }
