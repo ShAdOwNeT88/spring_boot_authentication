@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
-    private LocalDateTime dateOfBirth;
+    private OffsetDateTime dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Role role;
 
