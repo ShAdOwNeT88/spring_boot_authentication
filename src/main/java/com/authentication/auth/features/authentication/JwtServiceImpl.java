@@ -1,15 +1,19 @@
 package com.authentication.auth.features.authentication;
 
+import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
+import com.authentication.auth.features.authentication.dao.repositories.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +24,9 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     private final long tokenCreatedAt = OffsetDateTime.now().toInstant().toEpochMilli();
     private final long tokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant().toEpochMilli();
@@ -55,6 +62,15 @@ public class JwtServiceImpl implements JwtService {
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    @Override
+    public boolean isRefreshTokenExpired(RefreshToken token) {
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+            refreshTokenRepository.delete(token);
+            return true;
+        }
+        return false;
     }
 
     private Date extractExpiration(String token) {
