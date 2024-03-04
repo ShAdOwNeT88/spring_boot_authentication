@@ -1,24 +1,32 @@
 package com.authentication.auth.features.authentication;
 
+import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
+import com.authentication.auth.features.authentication.dao.repositories.RefreshTokenRepository;
+import com.authentication.auth.features.user.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -41,15 +49,47 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Instant tokenCreatedAt = OffsetDateTime.now().toInstant();
+        Instant tokenExpiredAt = OffsetDateTime.now().plusMinutes(3).toInstant();
+
+        System.out.println("Token Created at " + tokenCreatedAt + " token expire at " + tokenExpiredAt);
+
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setIssuedAt(Date.from(tokenCreatedAt))
+                .setExpiration(Date.from(tokenExpiredAt))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    @Override
+    public RefreshToken generateRefreshToken(User user) {
+        Instant refreshTokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant();
+
+        List<RefreshToken> tokens = refreshTokenRepository.findByUserInfo(user);
+        for (RefreshToken token : tokens) {
+            refreshTokenRepository.delete(token);
+        }
+
+        RefreshToken refreshToken = RefreshToken.builder()
+                .userInfo(user)
+                .token(UUID.randomUUID().toString())
+                .expiryDate(refreshTokenExpiredAt)
+                .build();
+
+        return refreshTokenRepository.save(refreshToken);
     }
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    @Override
+    public boolean isRefreshTokenExpired(RefreshToken token) {
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+            refreshTokenRepository.delete(token);
+            return true;
+        }
+        return false;
     }
 
     private Date extractExpiration(String token) {

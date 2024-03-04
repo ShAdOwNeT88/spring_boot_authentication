@@ -1,22 +1,16 @@
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth
+    username: root
+    password: Lacasadibarbie88
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
   application:
     name: spring-authentication
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  datasource:
-    url: jdbc:h2:mem:spring-security
-    driver-class-name: org.h2.Driver
-    username: root
-    password: 12345
-  h2:
-    console:
-      enabled: true
 token:
   signing:
     #This key is used as base to generate tokens for authentication

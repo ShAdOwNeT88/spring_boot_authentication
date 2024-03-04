@@ -1,6 +1,7 @@
 package com.authentication.auth.features.authentication.controllers;
 
 import com.authentication.auth.features.authentication.AuthenticationService;
+import com.authentication.auth.features.authentication.dao.request.RefreshTokenRequest;
 import com.authentication.auth.features.authentication.dao.request.SignUpRequest;
 import com.authentication.auth.features.authentication.dao.request.SigninRequest;
 import com.authentication.auth.features.authentication.dao.response.JwtAuthenticationResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+
     @PostMapping("/signup")
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
         return ResponseEntity.ok(authenticationService.signup(request));
@@ -24,5 +26,10 @@ public class AuthenticationController {
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
         return ResponseEntity.ok(authenticationService.signin(request));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<JwtAuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 }

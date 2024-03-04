@@ -1,4 +1,4 @@
-package com.authentication.auth.features.authentication.dao.response;
+package com.authentication.auth.features.authentication.dao.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthenticationResponse {
-    private String authToken;
+public class RefreshTokenRequest {
+    private String accessToken;
     private String refreshToken;
 }
