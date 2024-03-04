@@ -45,20 +45,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
-        RefreshToken refreshToken = createRefreshToken(user);
+        RefreshToken refreshToken = jwtService.generateRefreshToken(user);
         return JwtAuthenticationResponse.builder().authToken(jwt).refreshToken(refreshToken.getToken()).build();
-    }
-
-    private RefreshToken createRefreshToken(User user) {
-        final Instant tokenExpiration = OffsetDateTime.now().plusMonths(2).toInstant();
-
-        RefreshToken refreshToken = RefreshToken.builder()
-                .userInfo(user)
-                .token(UUID.randomUUID().toString())
-                .expiryDate(tokenExpiration)
-                .build();
-
-        return refreshTokenRepository.save(refreshToken);
     }
 
     @Override
@@ -67,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //TODO Instead of only throw IllegalArgumentException maybe we could handle an error on the controller side
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
         var jwt = jwtService.generateToken(user);
-        RefreshToken refreshToken = createRefreshToken(user);
+        RefreshToken refreshToken = jwtService.generateRefreshToken(user);
         return JwtAuthenticationResponse.builder().authToken(jwt).refreshToken(refreshToken.getToken()).build();
     }
 

@@ -2,6 +2,7 @@ package com.authentication.auth.features.authentication;
 
 import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
 import com.authentication.auth.features.authentication.dao.repositories.RefreshTokenRepository;
+import com.authentication.auth.features.user.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -30,6 +32,7 @@ public class JwtServiceImpl implements JwtService {
 
     private final long tokenCreatedAt = OffsetDateTime.now().toInstant().toEpochMilli();
     private final long tokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant().toEpochMilli();
+    private final Instant refreshTokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant();
 
     @Override
     public String extractUserName(String token) {
@@ -58,6 +61,17 @@ public class JwtServiceImpl implements JwtService {
                 .setIssuedAt(new Date(tokenCreatedAt))
                 .setExpiration(new Date(tokenExpiredAt))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    @Override
+    public RefreshToken generateRefreshToken(User user) {
+        RefreshToken refreshToken = RefreshToken.builder()
+                .userInfo(user)
+                .token(UUID.randomUUID().toString())
+                .expiryDate(refreshTokenExpiredAt)
+                .build();
+
+        return refreshTokenRepository.save(refreshToken);
     }
 
     private boolean isTokenExpired(String token) {
