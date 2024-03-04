@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -29,10 +26,6 @@ public class JwtServiceImpl implements JwtService {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
-
-    private final long tokenCreatedAt = OffsetDateTime.now().toInstant().toEpochMilli();
-    private final long tokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant().toEpochMilli();
-    private final Instant refreshTokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant();
 
     @Override
     public String extractUserName(String token) {
@@ -56,15 +49,27 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Instant tokenCreatedAt = OffsetDateTime.now().toInstant();
+        Instant tokenExpiredAt = OffsetDateTime.now().plusMinutes(3).toInstant();
+
+        System.out.println("Token Created at " + tokenCreatedAt + " token expire at " + tokenExpiredAt);
+
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(tokenCreatedAt))
-                .setExpiration(new Date(tokenExpiredAt))
+                .setIssuedAt(Date.from(tokenCreatedAt))
+                .setExpiration(Date.from(tokenExpiredAt))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     @Override
     public RefreshToken generateRefreshToken(User user) {
+        Instant refreshTokenExpiredAt = OffsetDateTime.now().plusMonths(1).toInstant();
+
+        List<RefreshToken> tokens = refreshTokenRepository.findByUserInfo(user);
+        for (RefreshToken token : tokens) {
+            refreshTokenRepository.delete(token);
+        }
+
         RefreshToken refreshToken = RefreshToken.builder()
                 .userInfo(user)
                 .token(UUID.randomUUID().toString())
