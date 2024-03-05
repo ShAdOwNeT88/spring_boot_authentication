@@ -1,10 +1,10 @@
 package com.authentication.auth.features.authentication.controllers;
 
 import com.authentication.auth.features.authentication.AuthenticationService;
-import com.authentication.auth.features.authentication.dao.request.RefreshTokenRequest;
-import com.authentication.auth.features.authentication.dao.request.SignUpRequest;
-import com.authentication.auth.features.authentication.dao.request.SigninRequest;
-import com.authentication.auth.features.authentication.dao.response.JwtAuthenticationResponse;
+import com.authentication.auth.features.authentication.dto.request.RefreshTokenRequest;
+import com.authentication.auth.features.authentication.dto.request.SignUpRequest;
+import com.authentication.auth.features.authentication.dto.request.SigninRequest;
+import com.authentication.auth.features.authentication.dto.response.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.authentication.auth.features.authentication.dao.request;
+package com.authentication.auth.features.authentication.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

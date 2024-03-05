@@ -1,4 +1,4 @@
-package com.authentication.auth.features.authentication.dao.response;
+package com.authentication.auth.features.authentication.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
