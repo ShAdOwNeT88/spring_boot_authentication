@@ -1,7 +1,7 @@
 package com.authentication.auth.features.authentication;
 
-import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
-import com.authentication.auth.features.authentication.dao.repositories.RefreshTokenRepository;
+import com.authentication.auth.features.authentication.entities.RefreshToken;
+import com.authentication.auth.features.authentication.repositories.RefreshTokenRepository;
 import com.authentication.auth.features.user.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -51,8 +51,6 @@ public class JwtServiceImpl implements JwtService {
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         Instant tokenCreatedAt = OffsetDateTime.now().toInstant();
         Instant tokenExpiredAt = OffsetDateTime.now().plusMinutes(3).toInstant();
-
-        System.out.println("Token Created at " + tokenCreatedAt + " token expire at " + tokenExpiredAt);
 
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(userDetails.getUsername())

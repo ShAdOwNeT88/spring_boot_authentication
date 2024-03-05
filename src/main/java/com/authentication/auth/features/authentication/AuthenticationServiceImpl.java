@@ -1,7 +1,7 @@
 package com.authentication.auth.features.authentication;
 
-import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
-import com.authentication.auth.features.authentication.dao.repositories.RefreshTokenRepository;
+import com.authentication.auth.features.authentication.entities.RefreshToken;
+import com.authentication.auth.features.authentication.repositories.RefreshTokenRepository;
 import com.authentication.auth.features.authentication.dao.request.RefreshTokenRequest;
 import com.authentication.auth.features.authentication.dao.request.SignUpRequest;
 import com.authentication.auth.features.authentication.dao.request.SigninRequest;

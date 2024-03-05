@@ -1,6 +1,6 @@
-package com.authentication.auth.features.authentication.dao.repositories;
+package com.authentication.auth.features.authentication.repositories;
 
-import com.authentication.auth.features.authentication.dao.entities.RefreshToken;
+import com.authentication.auth.features.authentication.entities.RefreshToken;
 import com.authentication.auth.features.user.entities.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

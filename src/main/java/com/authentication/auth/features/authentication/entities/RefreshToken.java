@@ -1,4 +1,4 @@
-package com.authentication.auth.features.authentication.dao.entities;
+package com.authentication.auth.features.authentication.entities;
 
 import com.authentication.auth.features.user.entities.User;
 import jakarta.persistence.*;
