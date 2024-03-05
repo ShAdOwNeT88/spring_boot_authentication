@@ -1,3 +1,7 @@
+server:
+  port: 5000
+---
+environment: production
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/auth
@@ -15,3 +19,30 @@ token:
   signing:
     #This key is used as base to generate tokens for authentication
     key: 413F4428472B4B6250655368566D5970337336763979244226452948404D6351
+  config:
+    activate:
+      on-profile: prod
+name: prod-YAML
+server:
+  port: 8080
+---
+environment: testing
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: root
+    password: password
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  application:
+    name: spring-authentication
+  config:
+    activate:
+      on-profile: test
+name: test-YAML
+server:
+  port: 4000
