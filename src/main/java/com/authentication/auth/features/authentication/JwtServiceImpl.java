@@ -49,13 +49,13 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        Instant tokenCreatedAt = OffsetDateTime.now().toInstant();
-        Instant tokenExpiredAt = OffsetDateTime.now().plusMinutes(3).toInstant();
+        OffsetDateTime tokenCreatedAt = OffsetDateTime.now();
+        OffsetDateTime tokenExpiredAt = tokenCreatedAt.plusMinutes(3);
 
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(Date.from(tokenCreatedAt))
-                .setExpiration(Date.from(tokenExpiredAt))
+                .setIssuedAt(Date.from(tokenCreatedAt.toInstant()))
+                .setExpiration(Date.from(tokenExpiredAt.toInstant()))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
